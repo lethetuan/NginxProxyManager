@@ -4,12 +4,15 @@
 Bước 1: Mở cổng tường lửa (UFW):
 
 sudo ufw allow 80/tcp
+
 sudo ufw allow 443/tcp
+
 sudo ufw allow 81/tcp
 
 Bước 2: Tạo thư mục và file compose.yml. Tạo một thư mục riêng biệt để chứa cấu hình và dữ liệu của NPM. Điều này giúp dữ liệu không bị mất khi bạn khởi động lại hoặc cập nhật Docker.
 
 mkdir -p ~/nginx-proxy-manager
+
 cd ~/nginx-proxy-manager
 
 Tạo và mở file compose.yml:
@@ -56,6 +59,7 @@ Bạn có thể kiểm tra xem container đã chạy ổn định (trạng thái
 
 Bước 5: Đăng nhập lần đầu tiên
 Mở trình duyệt web của bạn và truy cập vào giao diện quản trị theo địa chỉ IP của server:
+
 👉 http://<IP_SERVER_CỦA_BẠN>:81
 
 Tài khoản đăng nhập mặc định:
