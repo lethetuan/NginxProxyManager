@@ -1,7 +1,7 @@
-# NginxProxyManager
-cài đặt Nginx Proxy Manager (NPM)
+# Cài đặt Nginx Proxy Manager (NPM) trên Ubuntu Server
 
-Mở cổng tường lửa (UFW):
+
+Bước 1: Mở cổng tường lửa (UFW):
 
 sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
