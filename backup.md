@@ -85,3 +85,14 @@ Giải thích cấu hình Cronjob:
 0 2 * * *: Thiết lập thời gian chạy là Phút 0, Giờ 2 (2:00 AM) mỗi ngày.
 
 >> /var/log/npm_backup.log 2>&1: Nhật ký (thành công/thất bại) sẽ được ghi lại âm thầm vào file /var/log/npm_backup.log. Bạn có thể đọc file này bằng lệnh cat /var/log/npm_backup.log để kiểm tra lịch sử chạy nếu cần.
+
+
+Để chạy thử kịch bản backup ngay lập tức (không cần chờ đến 2h sáng), bạn chỉ cần gọi trực tiếp đường dẫn của file script bằng quyền sudo. Bạn hãy gõ lệnh sau vào Terminal:
+```bash
+sudo /opt/docker/npm/auto_backup.sh
+```
+
+dùng lệnh ls kết hợp tham số -lh để xem danh sách file trong thư mục backup kèm theo dung lượng thực tế của chúng:
+```bash
+ls -lh /opt/docker/npm/backups
+```
