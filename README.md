@@ -298,7 +298,6 @@ sudo chmod 600 .env
 Tạo file Compose:
 
 ```bash
-# Database Passwords
 services:
   app:
     image: 'jc21/nginx-proxy-manager:2.15.1'
