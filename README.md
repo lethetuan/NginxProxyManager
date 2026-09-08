@@ -379,14 +379,14 @@ sudo docker compose logs -f app
 Nếu bạn thấy thông báo kiểu như: [Nginx] › ℹ  info      Reloading Nginx và không có dòng chữ báo lỗi nào (màu đỏ) về Database. Bạn nhấn Ctrl + C để thoát khỏi màn hình xem log.
 
 ### Bước 4: Tạo SSH Tunnel để truy cập an toàn
-Vì chúng ta đã thiết lập tính năng bảo mật cao nhất (không mở cổng 81 ra Internet), nên bạn không thể gõ trực tiếp http://IP_Server:81 trên trình duyệt được.
+Vì chúng ta đã thiết lập tính năng bảo mật cao nhất (không mở cổng 81 ra Internet), nên bạn không thể gõ trực tiếp http://IP_Server:81 trên trình duyệt được. Mỗi lần muốn vào Web GUI Nginx Proxy Manager, bạn đều phải mở cửa sổ Terminal và chạy lệnh SSH Tunnel.
 
-Bạn hãy mở một cửa sổ Terminal/Command Prompt mới trên máy tính cá nhân của bạn (Laptop/PC đang dùng) và gõ lệnh sau:
+Mở một cửa sổ Terminal/Command Prompt mới trên máy tính cá nhân của bạn (Laptop/PC đang dùng) và gõ lệnh sau:
 ```bash
 ssh -L 8081:127.0.0.1:81 user_cua_ban@IP_Server_Cua_Ban
 ```
 
-(Thay user_cua_ban và IP_Server_Cua_Ban bằng tài khoản đăng nhập SSH vào server của bạn). Lệnh này tạo một "đường hầm" an toàn, nối cổng 8081 trên máy tính của bạn với cổng 81 trên Server. Cứ treo cửa sổ này ở đó, đừng tắt đi.
+(Thay user_cua_ban và IP_Server_Cua_Ban bằng tài khoản đăng nhập SSH vào server của bạn). Lệnh này tạo một "đường hầm" an toàn, nối cổng 8081 trên máy tính của bạn với cổng 81 trên Server. Cứ treo cửa sổ này ở đó, đừng tắt đi trong quá trình chạy này chúng ta sẽ đăng nhập được Web GUI.
 
 ### Bước 5: Đăng nhập Web GUI và thiết lập bảo mật lần đầu
 Mở trình duyệt web trên máy tính của bạn (Chrome, Edge, Safari...).
