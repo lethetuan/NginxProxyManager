@@ -201,7 +201,7 @@ echo \
 ### Bước 4: Cài đặt Docker
 Cập nhật lại apt cache để nhận repo mới và tiến hành cài đặt:
 ```bash
-sudo apt update && sudo apt upgrade -y
+sudo apt update
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
