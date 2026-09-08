@@ -263,3 +263,88 @@ sudo docker run --rm hello-world
 
 
 ## Phần 4. Cài đặt Nginx Proxy Manager
+1. Chuẩn bị môi trường và Cấu trúc thư mục. Để các container giao tiếp an toàn và tách biệt, chúng ta sẽ tạo một Docker Network riêng (ví dụ tên là proxy-tier). Bất kỳ dịch vụ nào sau này bạn muốn chạy qua tên miền đều sẽ được gắn vào mạng này, thay vì mở port trực tiếp ra ngoài.
+
+Tạo Docker Network:
+```bash
+sudo docker network create proxy-tier
+```
+
+Tạo cấu trúc thư mục lưu trữ:
+```bash
+sudo mkdir -p /opt/docker/npm
+cd /opt/docker/npm
+```
+2. Quản lý Secret với file .env. Tuyệt đối không lưu mật khẩu database dưới dạng "clear text" trong file cấu hình chính. Chúng ta sẽ dùng file .env để quản lý. Đứng ngay tại thư mục /opt/docker/npm Tạo file .env: 
+```bash
+sudo nano .env
+```
+sau đó dán nội dung dưới vào vào file .env 
+```bash
+# Database Passwords
+DB_ROOT_PASSWORD=Thay_Bang_Mat_Khau_Root_Sieu_Kho
+DB_PASSWORD=Thay_Bang_Mat_Khau_User_Sieu_Kho
+```
+Lưu file bằng cách nhấn Ctrl+O, Enter và Ctrl+X. 
+
+Để bảo mật, phân quyền lại file .env để chỉ root mới có thể đọc bằng lệnh:
+
+```bash
+sudo chmod 600 .env
+```
+
+3. Cấu hình docker-compose.yml chuẩn. Mặc định, NPM dùng SQLite (khá yếu và dễ lỗi khi có nhiều luồng truy cập). Chúng ta sẽ dùng mySQL làm cơ sở dữ liệu để đảm bảo hiệu suất.
+
+Tạo file Compose:
+
+```bash
+# Database Passwords
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:2.15.1'
+    container_name: npm_app
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+      # Bảo mật: Chỉ cho phép truy cập Admin Panel qua localhost
+      - '127.0.0.1:81:81'
+    environment:
+      TZ: "Asia/Ho_Chi_Minh"
+      DB_MYSQL_HOST: "db"
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: "npm"
+      DB_MYSQL_PASSWORD: "${DB_PASSWORD}"
+      DB_MYSQL_NAME: "npm"
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+    depends_on:
+      - db
+    networks:
+      - proxy-tier
+
+  db:
+    image: 'mariadb:10.11'
+    container_name: npm_db
+    restart: unless-stopped
+    environment:
+      TZ: "Asia/Ho_Chi_Minh"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "npm"
+      MYSQL_USER: "npm"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+    volumes:
+      - ./mysql:/var/lib/mysql
+    networks:
+      - proxy-tier
+
+networks:
+  proxy-tier:
+    external: true
+```
+
+Lưu ý: Để file docker-compose.yml này chạy được, bạn nhớ phải có file .env nằm cùng thư mục (chứa 2 biến mật khẩu DB_ROOT_PASSWORD và DB_PASSWORD) như chúng ta đã cấu hình ở bước trước nhé.
+<img width="747" height="143" alt="image" src="https://github.com/user-attachments/assets/a16e8779-05f5-4033-9228-e23851def3ef" />
+
+
