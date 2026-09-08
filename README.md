@@ -346,4 +346,31 @@ networks:
 Lưu ý: Để file docker-compose.yml này chạy được, bạn nhớ phải có file .env nằm cùng thư mục (chứa 2 biến mật khẩu DB_ROOT_PASSWORD và DB_PASSWORD) như chúng ta đã cấu hình ở bước trước nhé.
 <img width="747" height="143" alt="image" src="https://github.com/user-attachments/assets/a16e8779-05f5-4033-9228-e23851def3ef" />
 
+Ngay tại thư mục /opt/docker/npm chứa file docker-compose.yml, chạy lệnh sau để Docker kéo các image về và chạy ngầm (chữ -d viết tắt của detached - chạy ngầm):
+```bash
+sudo docker compose up -d
+```
+Lần đầu tiên chạy sẽ mất một chút thời gian để hệ thống tải jc21/nginx-proxy-manager và mysql từ Internet về server.
+
+Kiểm tra log (Rất quan trọng). Sau khi lệnh trên chạy xong, cần kiểm tra xem NPM đã kết nối thành công với Database chưa (để chắc chắn mật khẩu trong file .env đã được nhận diện đúng).
+
+```bash
+sudo docker compose logs -f app
+```
+Nếu bạn thấy thông báo kiểu như: [Nginx] › ℹ  info      Reloading Nginx và không có dòng chữ báo lỗi nào (màu đỏ) về Database. Bạn nhấn Ctrl + C để thoát khỏi màn hình xem log.
+
+Bước 3: Tạo SSH Tunnel để truy cập an toàn
+Vì chúng ta đã thiết lập tính năng bảo mật cao nhất (không mở cổng 81 ra Internet), nên bạn không thể gõ trực tiếp http://IP_Server:81 trên trình duyệt được.
+
+Bạn hãy mở một cửa sổ Terminal/Command Prompt mới trên máy tính cá nhân của bạn (Laptop/PC đang dùng) và gõ lệnh sau:
+```bash
+ssh -L 8081:127.0.0.1:81 user_cua_ban@IP_Server_Cua_Ban
+```
+
+(Thay user_cua_ban và IP_Server_Cua_Ban bằng tài khoản đăng nhập SSH vào server của bạn). Lệnh này tạo một "đường hầm" an toàn, nối cổng 8081 trên máy tính của bạn với cổng 81 trên Server. Cứ treo cửa sổ này ở đó, đừng tắt đi.
+
+Bước 4: Đăng nhập và thiết lập bảo mật lần đầu
+Mở trình duyệt web trên máy tính của bạn (Chrome, Edge, Safari...).
+
+Truy cập vào địa chỉ: http://localhost:8081 để tạo tài khoản admin đầu tiên.
 
