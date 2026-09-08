@@ -263,19 +263,18 @@ sudo docker run --rm hello-world
 
 
 ## Phần 4. Cài đặt Nginx Proxy Manager
-Bước 1. Chuẩn bị môi trường và Cấu trúc thư mục. Để các container giao tiếp an toàn và tách biệt, chúng ta sẽ tạo một Docker Network riêng (ví dụ tên là proxy-tier). Bất kỳ dịch vụ nào sau này bạn muốn chạy qua tên miền đều sẽ được gắn vào mạng này, thay vì mở port trực tiếp ra ngoài.
-
-Tạo Docker Network:
+### Bước 1. Chuẩn bị môi trường và Cấu trúc thư mục. 
+Để các container giao tiếp an toàn và tách biệt, chúng ta sẽ tạo một Docker Network riêng (ví dụ tên là proxy-tier). Bất kỳ dịch vụ nào sau này bạn muốn chạy qua tên miền đều sẽ được gắn vào mạng này, thay vì mở port trực tiếp ra ngoài. Tạo Docker Network:
 ```bash
 sudo docker network create proxy-tier
 ```
-
-Tạo cấu trúc thư mục lưu trữ:
+sau đó tạo cấu trúc thư mục lưu trữ Nginx Proxy Manager:
 ```bash
 sudo mkdir -p /opt/docker/npm
 cd /opt/docker/npm
 ```
-Bước 2. Quản lý Secret với file .env. Tuyệt đối không lưu mật khẩu database dưới dạng "clear text" trong file cấu hình chính. Chúng ta sẽ dùng file .env để quản lý. Đứng ngay tại thư mục /opt/docker/npm Tạo file .env: 
+### Bước 2. Quản lý Secret với file .env. 
+Tuyệt đối không lưu mật khẩu database dưới dạng "clear text" trong file cấu hình chính. Chúng ta sẽ dùng file .env để quản lý. Đứng ngay tại thư mục /opt/docker/npm Tạo file .env bằng lệnh: 
 ```bash
 sudo nano .env
 ```
@@ -287,16 +286,19 @@ DB_PASSWORD=Thay_Bang_Mat_Khau_User_Sieu_Kho
 ```
 Lưu file bằng cách nhấn Ctrl+O, Enter và Ctrl+X. 
 
-Để bảo mật, phân quyền lại file .env để chỉ root mới có thể đọc bằng lệnh:
+Để bảo mật, phân quyền lại file .env chỉ cho phép tài khoản root mới có thể đọc file bằng lệnh:
 
 ```bash
 sudo chmod 600 .env
 ```
 
-Bước 3. Cấu hình docker-compose.yml chuẩn. Mặc định, NPM dùng SQLite (khá yếu và dễ lỗi khi có nhiều luồng truy cập). Chúng ta sẽ dùng mySQL làm cơ sở dữ liệu để đảm bảo hiệu suất.
-
-Tạo file Compose:
-
+### Bước 3. Cấu hình docker-compose.yml chuẩn. 
+Mặc định, NPM dùng SQLite (khá yếu và dễ lỗi khi có nhiều luồng truy cập). Chúng ta sẽ dùng mySQL làm cơ sở dữ liệu để đảm bảo hiệu suất. Đứng ngay tại thư mục Tạo file docker-compose.yml:
+```bash
+cd /opt/docker/npm
+sudo nano docker-compose.yml
+```
+sau đó dán nội dung dưới vào trong file docker-compose.yml
 ```bash
 services:
   app:
@@ -359,7 +361,7 @@ sudo docker compose logs -f app
 ```
 Nếu bạn thấy thông báo kiểu như: [Nginx] › ℹ  info      Reloading Nginx và không có dòng chữ báo lỗi nào (màu đỏ) về Database. Bạn nhấn Ctrl + C để thoát khỏi màn hình xem log.
 
-Bước 4: Tạo SSH Tunnel để truy cập an toàn
+### Bước 4: Tạo SSH Tunnel để truy cập an toàn
 Vì chúng ta đã thiết lập tính năng bảo mật cao nhất (không mở cổng 81 ra Internet), nên bạn không thể gõ trực tiếp http://IP_Server:81 trên trình duyệt được.
 
 Bạn hãy mở một cửa sổ Terminal/Command Prompt mới trên máy tính cá nhân của bạn (Laptop/PC đang dùng) và gõ lệnh sau:
@@ -369,7 +371,7 @@ ssh -L 8081:127.0.0.1:81 user_cua_ban@IP_Server_Cua_Ban
 
 (Thay user_cua_ban và IP_Server_Cua_Ban bằng tài khoản đăng nhập SSH vào server của bạn). Lệnh này tạo một "đường hầm" an toàn, nối cổng 8081 trên máy tính của bạn với cổng 81 trên Server. Cứ treo cửa sổ này ở đó, đừng tắt đi.
 
-Bước 4: Đăng nhập và thiết lập bảo mật lần đầu
+### Bước 5: Đăng nhập Web GUI và thiết lập bảo mật lần đầu
 Mở trình duyệt web trên máy tính của bạn (Chrome, Edge, Safari...).
 
 Truy cập vào địa chỉ: http://localhost:8081 để tạo tài khoản admin đầu tiên.
