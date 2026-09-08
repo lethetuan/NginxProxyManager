@@ -108,7 +108,8 @@ ssh-keygen -t ed25519 -C "ten_may_tinh_cua_ban"
 *(Ghi chú: `-C "ten_may_tinh_cua_ban"` chỉ để note lại tên máy tính giúp bạn dễ quản lý).*
 
 **2. Sao chép Public Key lên Server Linux:**
-Di chuyển đến thư mục chứa key:
+
+Di chuyển đến thư mục chứa key trên máy tính Window của Admin:
 
 ```cmd
 cd C:\Users\username\.ssh
