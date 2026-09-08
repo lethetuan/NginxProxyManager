@@ -305,38 +305,55 @@ services:
     image: 'jc21/nginx-proxy-manager:2.15.1'
     container_name: npm_app
     restart: unless-stopped
+
     ports:
       - '80:80'
       - '443:443'
-      # Bảo mật: Chỉ cho phép truy cập Admin Panel qua localhost bằng SSH Tunnel
+      # Chỉ cho phép truy cập Admin Panel qua localhost bằng ssh Tunnel
       - '127.0.0.1:81:81'
+
     environment:
       TZ: "Asia/Ho_Chi_Minh"
+
       DB_MYSQL_HOST: "db"
       DB_MYSQL_PORT: 3306
       DB_MYSQL_USER: "npm"
       DB_MYSQL_PASSWORD: "${DB_PASSWORD}"
       DB_MYSQL_NAME: "npm"
+
     volumes:
       - ./data:/data
       - ./letsencrypt:/etc/letsencrypt
+
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
     networks:
       - proxy-tier
 
   db:
-    image: 'mysql:8.0'  # mysql:8.0
+    image: 'mysql:8.0'
     container_name: npm_db
     restart: unless-stopped
+
     environment:
       TZ: "Asia/Ho_Chi_Minh"
       MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
       MYSQL_DATABASE: "npm"
       MYSQL_USER: "npm"
       MYSQL_PASSWORD: "${DB_PASSWORD}"
+
     volumes:
       - ./mysql:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
     networks:
       - proxy-tier
 
