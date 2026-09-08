@@ -398,5 +398,11 @@ ssh -i /duongdan/file_Privatekey_cua_ban.pem -L 8081:127.0.0.1:81 user_cua_ban@I
 ### Bước 5: Đăng nhập Web GUI và thiết lập bảo mật lần đầu
 Mở trình duyệt web trên máy tính của bạn (Chrome, Edge, Safari...).
 
-Truy cập vào địa chỉ: http://localhost:8081 để tạo tài khoản admin đầu tiên.
+Truy cập vào địa chỉ: http://localhost:8081 sau đó đăng nhập bằng tài khoản mặc định của hệ thống:
+
+Email: admin@example.com
+
+Password: changeme
+
+Ngay sau khi đăng nhập thành công, hệ thống sẽ yêu cầu bạn đổi thành Tên, Email thật của bạn và thiết lập Mật khẩu mới an toàn hơn.
 
