@@ -263,7 +263,7 @@ sudo docker run --rm hello-world
 
 
 ## Phần 4. Cài đặt Nginx Proxy Manager
-1. Chuẩn bị môi trường và Cấu trúc thư mục. Để các container giao tiếp an toàn và tách biệt, chúng ta sẽ tạo một Docker Network riêng (ví dụ tên là proxy-tier). Bất kỳ dịch vụ nào sau này bạn muốn chạy qua tên miền đều sẽ được gắn vào mạng này, thay vì mở port trực tiếp ra ngoài.
+Bước 1. Chuẩn bị môi trường và Cấu trúc thư mục. Để các container giao tiếp an toàn và tách biệt, chúng ta sẽ tạo một Docker Network riêng (ví dụ tên là proxy-tier). Bất kỳ dịch vụ nào sau này bạn muốn chạy qua tên miền đều sẽ được gắn vào mạng này, thay vì mở port trực tiếp ra ngoài.
 
 Tạo Docker Network:
 ```bash
@@ -275,7 +275,7 @@ Tạo cấu trúc thư mục lưu trữ:
 sudo mkdir -p /opt/docker/npm
 cd /opt/docker/npm
 ```
-2. Quản lý Secret với file .env. Tuyệt đối không lưu mật khẩu database dưới dạng "clear text" trong file cấu hình chính. Chúng ta sẽ dùng file .env để quản lý. Đứng ngay tại thư mục /opt/docker/npm Tạo file .env: 
+Bước 2. Quản lý Secret với file .env. Tuyệt đối không lưu mật khẩu database dưới dạng "clear text" trong file cấu hình chính. Chúng ta sẽ dùng file .env để quản lý. Đứng ngay tại thư mục /opt/docker/npm Tạo file .env: 
 ```bash
 sudo nano .env
 ```
@@ -293,7 +293,7 @@ Lưu file bằng cách nhấn Ctrl+O, Enter và Ctrl+X.
 sudo chmod 600 .env
 ```
 
-3. Cấu hình docker-compose.yml chuẩn. Mặc định, NPM dùng SQLite (khá yếu và dễ lỗi khi có nhiều luồng truy cập). Chúng ta sẽ dùng mySQL làm cơ sở dữ liệu để đảm bảo hiệu suất.
+Bước 3. Cấu hình docker-compose.yml chuẩn. Mặc định, NPM dùng SQLite (khá yếu và dễ lỗi khi có nhiều luồng truy cập). Chúng ta sẽ dùng mySQL làm cơ sở dữ liệu để đảm bảo hiệu suất.
 
 Tạo file Compose:
 
@@ -359,7 +359,7 @@ sudo docker compose logs -f app
 ```
 Nếu bạn thấy thông báo kiểu như: [Nginx] › ℹ  info      Reloading Nginx và không có dòng chữ báo lỗi nào (màu đỏ) về Database. Bạn nhấn Ctrl + C để thoát khỏi màn hình xem log.
 
-Bước 3: Tạo SSH Tunnel để truy cập an toàn
+Bước 4: Tạo SSH Tunnel để truy cập an toàn
 Vì chúng ta đã thiết lập tính năng bảo mật cao nhất (không mở cổng 81 ra Internet), nên bạn không thể gõ trực tiếp http://IP_Server:81 trên trình duyệt được.
 
 Bạn hãy mở một cửa sổ Terminal/Command Prompt mới trên máy tính cá nhân của bạn (Laptop/PC đang dùng) và gõ lệnh sau:
