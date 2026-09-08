@@ -386,6 +386,12 @@ Mở một cửa sổ Terminal/Command Prompt mới trên máy tính cá nhân c
 ssh -L 8081:127.0.0.1:81 user_cua_ban@IP_Server_Cua_Ban
 ```
 
+Nếu hệ thống của bạn chỉ sử dụng file Private Key để đăng nhập ssh server hãy dùng lệnh
+
+```bash
+ssh -i /duongdan/file_Privatekey_cua_ban.pem -L 8081:127.0.0.1:81 user_cua_ban@IP_Server_Cua_Ban
+```
+
 (Thay user_cua_ban và IP_Server_Cua_Ban bằng tài khoản đăng nhập SSH vào server của bạn). Lệnh này tạo một "đường hầm" an toàn, nối cổng 8081 trên máy tính của bạn với cổng 81 trên Server. Cứ treo cửa sổ này ở đó, đừng tắt đi trong quá trình chạy này chúng ta sẽ đăng nhập được Web GUI.
 
 ### Bước 5: Đăng nhập Web GUI và thiết lập bảo mật lần đầu
