@@ -159,3 +159,101 @@ Sau khi bạn đã chắc chắn có thể đăng nhập thành công bằng SSH
    ```bash
    sudo systemctl restart ssh
    ```
+
+
+## Phần 3. Cài đặt Docker và các thành phần cốt lõi của Docker
+
+### Bước 1: Cập nhật index các gói phần mềm của hệ thống Server
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+
+### Bước 2: Cài đặt các dependencies cần thiết
+```bash
+sudo apt install -y \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release \
+    apt-transport-https
+```
+
+### Bước 3: Cấu hình repository của Docker
+Tạo thư mục chứa keyrings nếu chưa có:
+```bash
+sudo mkdir -p /etc/apt/keyrings
+sudo chmod 0755 /etc/apt/keyrings
+```
+
+Tải và lưu GPG key của Docker an toàn:
+```bash
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+```
+
+Thêm Docker repository vào APT sources:
+```bash
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
+### Bước 4: Cài đặt Docker
+Cập nhật lại apt cache để nhận repo mới và tiến hành cài đặt:
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+### Bước 5: Cấu hình bảo mật Docker Daemon (Quan trọng)
+Mặc định Docker daemon khá "thoải mái". Nếu đang cài Docker mới hoàn toàn, bạn cần thực hiện bước này để siết chặt lại.
+```bash
+sudo mkdir -p /etc/docker
+sudo nano /etc/docker/daemon.json
+```
+Dán nội dung dưới vào file `daemon.json` và lưu lại:
+```json
+{
+  "icc": false,
+  "no-new-privileges": true,
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "50m",
+    "max-file": "3"
+  },
+  "live-restore": true,
+  "userland-proxy": false
+}
+```
+> **Giải thích các thông số bảo mật:**
+> - `"icc": false`: Ngăn chặn các container trong cùng default bridge network tự do nói chuyện với nhau. Phải link explicitly qua custom network.
+> - `"no-new-privileges": true`: Ngăn chặn tiến trình trong container tự ý leo thang đặc quyền (ví dụ dùng `su` hay `sudo`).
+> - `"log-opts"`: Ngăn tình trạng log của container phình to làm tràn ổ cứng (chỉ giữ tối đa 3 file, mỗi file 50MB).
+> - `"live-restore": true`: Cho phép container tiếp tục chạy khi Docker daemon tạm thời bị restart/mất kết nối, trong các điều kiện được Docker hỗ trợ
+> - `"userland-proxy": false`: Tắt proxy không cần thiết, giảm bề mặt tấn công. Sử dụng iptables thuần túy để route port.
+
+### Bước 6: Khởi động lại và phân quyền
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+Cấu hình tự động khởi động Docker và containerd cùng hệ điều hành:
+```bash
+sudo systemctl enable docker
+sudo systemctl enable containerd
+```
+
+### Bước 7: Kiểm tra hệ thống
+Xác minh phiên bản và trạng thái hoạt động:
+```bash
+# Kiểm tra version Docker Engine
+sudo docker version
+
+# Kiểm tra version Docker Compose Plugin
+sudo docker compose version
+
+# Chạy thử container an toàn để test
+sudo docker run --rm hello-world
+```
+
+---
