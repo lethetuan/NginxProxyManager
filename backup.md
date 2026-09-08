@@ -19,6 +19,8 @@ Dán toàn bộ đoạn mã dưới đây vào file:
 
 ```bash
 #!/bin/bash
+# Khai báo PATH để Cronjob nhận diện được lệnh docker
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # ==========================================
 # CẤU HÌNH THÔNG SỐ
