@@ -252,8 +252,14 @@ sudo docker version
 # Kiểm tra version Docker Compose Plugin
 sudo docker compose version
 
+
+
 # Chạy thử container an toàn để test
 sudo docker run --rm hello-world
 ```
 
 ---
+
+
+
+## Phần 4. Cài đặt Nginx Proxy Manager
