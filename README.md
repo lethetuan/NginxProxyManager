@@ -308,7 +308,7 @@ services:
     ports:
       - '80:80'
       - '443:443'
-      # Bảo mật: Chỉ cho phép truy cập Admin Panel qua localhost
+      # Bảo mật: Chỉ cho phép truy cập Admin Panel qua localhost bằng SSH Tunnel
       - '127.0.0.1:81:81'
     environment:
       TZ: "Asia/Ho_Chi_Minh"
@@ -326,7 +326,7 @@ services:
       - proxy-tier
 
   db:
-    image: 'mariadb:10.11'
+    image: 'mysql:8.0'  # mysql:8.0
     container_name: npm_db
     restart: unless-stopped
     environment:
